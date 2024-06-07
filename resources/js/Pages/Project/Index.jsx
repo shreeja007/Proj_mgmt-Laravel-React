@@ -3,17 +3,20 @@ import SelectInput from "@/Components/SelectInput";
 import TextInput from "@/Components/TextInput";
 import Authenticated from "@/Layouts/AuthenticatedLayout";
 import { PROJECT_STATUS_CLASS_MAP, PROJECT_STATUS_TEXT_MAP } from "@/constants.jsx";
-import { Head, Link } from "@inertiajs/react";
+import { Head, Link, router } from "@inertiajs/react";
 import React from "react";
 
 export default function index({ auth, projects, queryParams = null }) {
 queryParams = queryParams || {}
   const searchFieldChanged = (name, value) => {
     if(value){
+            console.log(name,value)
       queryParams[name] = value
     } else {
       delete queryParams[name]
     }
+
+    router.get(route('project.index'),queryParams)
   }
 
   const onKeyPress = (name,e) => {
@@ -22,7 +25,7 @@ queryParams = queryParams || {}
     searchFieldChanged(name, e.target.value);
   }
 
-  return (
+return (
     <Authenticated
       user={auth.user}
       header={
@@ -54,12 +57,12 @@ queryParams = queryParams || {}
                     <th className="px-3 py-3"></th>
                     <th className="px-3 py-3"></th>
                     <th className="px-3 py-3">
-                      <TextInput className="w-full" placeholder="project Name"
+                      <TextInput className="w-full" placeholder="project Name" defaultValue={queryParams.name}
                       onBlur={e => searchFieldChanged('name', e.target.value)}
                       onKeyPress={e => onKeyPress('name',e)}/>
                     </th>
                     <th className="px-3 py-3">
-                      <SelectInput className="w-full" onChange={e=>searchFieldChanged("status", e.target.value)}>
+                      <SelectInput className="w-full" onChange={e=>searchFieldChanged("status", e.target.value)} defaultValue={queryParams.status}>
                         <option value="">Select Status</option>
                         <option value="pending">pending</option>
                         <option value="in_progress">in_progress</option>
